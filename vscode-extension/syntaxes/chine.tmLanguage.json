@@ -1,0 +1,149 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "華語 (HuaLang)",
+  "scopeName": "source.chine",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#builtins" },
+    { "include": "#operators" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.chine",
+          "match": "(//|#|註：|註:).*$"
+        },
+        {
+          "name": "comment.block.chine",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.chine",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "name": "constant.character.escape.chine", "match": "\\\\." }
+          ]
+        },
+        {
+          "name": "string.quoted.single.chine",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            { "name": "constant.character.escape.chine", "match": "\\\\." }
+          ]
+        },
+        {
+          "name": "string.quoted.traditional.chine",
+          "begin": "「",
+          "end": "」",
+          "patterns": [
+            { "name": "constant.character.escape.chine", "match": "\\\\." }
+          ]
+        },
+        {
+          "name": "string.quoted.traditional.double.chine",
+          "begin": "『",
+          "end": "』",
+          "patterns": [
+            { "name": "constant.character.escape.chine", "match": "\\\\." }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.chine",
+          "match": "\\b\\d+(\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.declaration.chine",
+          "match": "(變數|設|令|常數)"
+        },
+        {
+          "name": "keyword.control.conditional.chine",
+          "match": "(若|如果|否則若|又若|否則)"
+        },
+        {
+          "name": "keyword.control.loop.chine",
+          "match": "(當|循環|從|到|遍歷|於|作為|步長)"
+        },
+        {
+          "name": "keyword.control.flow.chine",
+          "match": "(回傳|返回|跳出|中斷|繼續)"
+        },
+        {
+          "name": "keyword.declaration.function.chine",
+          "match": "(函式|定義|函數)"
+        },
+        {
+          "name": "constant.language.boolean.chine",
+          "match": "(真|假)"
+        },
+        {
+          "name": "constant.language.null.chine",
+          "match": "(空)"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "name": "support.function.builtin.chine",
+          "match": "(印出|輸出|輸入|等待)"
+        },
+        {
+          "name": "support.class.builtin.chine",
+          "match": "(算術|字串|陣列|海龜|畫布|音效)"
+        },
+        {
+          "name": "support.variable.property.chine",
+          "match": "\\.(長度|隨機數|整數隨機數|平方根|絕對值|前進|後退|左轉|右轉|設顏色|設筆寬|抬筆|落筆|畫圓|實心圓|重設|音階|頻率|嗶)"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.chine",
+          "match": "(==|!=|<=|>=|<|>|等於|不等於|大於等於|小於等於|大於|小於)"
+        },
+        {
+          "name": "keyword.operator.logical.chine",
+          "match": "(&&|\\|\\||!|且|或|非)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.chine",
+          "match": "(\\+|-|\\*|/|%|\\^|\\+=|-=|\\*=|/=|\\=)"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.chine",
+          "match": "(,|，|;|；|:|：|\\.|。)"
+        },
+        {
+          "name": "punctuation.bracket.chine",
+          "match": "(\\(|\\)|（|）|\\[|\\]|【|】|\\{|\\})"
+        }
+      ]
+    }
+  }
+}

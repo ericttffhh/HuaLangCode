@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>華語 (HuaLang) - 中文程式語言與網頁雲端 IDE</title>
+  <meta name="description" content="華語 (HuaLang) 是一款專為中文母語者設計的現代程式語言，支援直觀中文語法、海龜繪圖、非同步等待、步驟除錯器與 JavaScript 雙向轉譯。">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body data-theme="default">
+
+  <!-- 頂部導航列與工具欄 -->
+  <header class="hl-header">
+    <div class="hl-brand">
+      <div class="hl-brand-icon">華</div>
+      <div class="hl-brand-text">
+        <h1>華語 <span class="badge">HuaLang v1.0</span></h1>
+        <p>以母語思考・用中文寫程式</p>
+      </div>
+    </div>
+
+    <!-- 執行控制工具列 -->
+    <div class="hl-toolbar">
+      <button id="btnRun" class="hl-btn hl-btn-primary" title="執行程式 (Ctrl+Enter)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>執行 (▶)</span>
+      </button>
+
+      <button id="btnStep" class="hl-btn" title="單步除錯執行">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+        <span>單步</span>
+      </button>
+
+      <button id="btnStop" class="hl-btn hl-btn-danger" style="display: none;" title="終止執行">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+        <span>停止</span>
+      </button>
+
+      <!-- 執行速度調節 -->
+      <div class="hl-speed-box">
+        <span>慢速動畫:</span>
+        <input type="range" id="speedSlider" min="0" max="300" step="50" value="0" title="調節步驟除錯動畫延遲 (0為極速)">
+        <span id="speedLabel">極速</span>
+      </div>
+
+      <button id="btnClear" class="hl-btn hl-btn-secondary" title="清空終端與畫布">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span>清空</span>
+      </button>
+
+      <!-- 主題切換 -->
+      <select id="themeSelector" class="hl-btn" style="padding: 5px 8px; font-size: 12px;">
+        <option value="default">🎨 深邃水墨</option>
+        <option value="vermilion">🏮 故宮硃砂</option>
+        <option value="bamboo">🎋 清雅竹青</option>
+        <option value="cyberpunk">⚡ 賽博霓虹</option>
+      </select>
+
+      <!-- 匯出與匯入 -->
+      <button id="btnExport" class="hl-btn hl-btn-icon-only" title="匯出 .zh 程式碼檔案">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+      <input type="file" id="fileInput" accept=".zh,.txt" style="display: none;">
+      <button id="btnImport" class="hl-btn hl-btn-icon-only" title="匯入 .zh 程式碼檔案">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主佈局區塊 -->
+  <main class="hl-main-layout">
+    <!-- 左側欄：範例與導覽 -->
+    <aside class="hl-sidebar" id="sidebar">
+      <div class="hl-sidebar-header">
+        <span>經典範例集錦</span>
+        <button id="btnToggleSidebar" class="hl-btn hl-btn-secondary hl-btn-icon-only" title="收起/展開側欄">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        </button>
+      </div>
+      <div class="hl-sidebar-content" id="exampleListContainer">
+        <!-- 動態渲染範例列表 -->
+      </div>
+    </aside>
+
+    <!-- 中間欄：代碼編輯區 -->
+    <section class="hl-editor-container">
+      <div class="hl-editor-tabs-bar">
+        <div class="hl-active-file-tab">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span id="currentFileName">主程式.chine</span>
+        </div>
+        <div class="hl-editor-actions">
+          <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">.chine 獨立高階語言</span>
+          <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;">Ctrl + Enter 執行</span>
+        </div>
+      </div>
+
+      <!-- 編輯器核心掛載節點 -->
+      <div id="editorMount" style="flex: 1; position: relative;"></div>
+
+      <!-- 狀態列 -->
+      <footer class="hl-statusbar">
+        <div class="hl-status-indicator">
+          <span class="hl-status-dot" id="statusDot"></span>
+          <span id="statusText">就緒 (Idle)</span>
+        </div>
+        <div id="cursorInfo">編譯器 + 組譯器 + 連結器 + HuaVM 虛擬機</div>
+      </footer>
+    </section>
+
+    <!-- 右側欄：多分頁輸出面板 -->
+    <section class="hl-output-panel">
+      <!-- 分頁標籤 -->
+      <div class="hl-output-tabs">
+        <button class="hl-tab-btn active" data-tab="tab-term">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          <span>終端輸出</span>
+        </button>
+        <button class="hl-tab-btn" data-tab="tab-casm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span>編譯器組語 (.casm)</span>
+        </button>
+        <button class="hl-tab-btn" data-tab="tab-cobj">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          <span>組譯目標檔 (.cobj)</span>
+        </button>
+        <button class="hl-tab-btn" data-tab="tab-cbinary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          <span>連結執行檔 (.cbinary)</span>
+        </button>
+        <button class="hl-tab-btn" data-tab="tab-canvas">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+          <span>海龜繪圖</span>
+        </button>
+        <button class="hl-tab-btn" data-tab="tab-vars">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><circle cx="4" cy="12" r="2"/><circle cx="12" cy="10" r="2"/><circle cx="20" cy="14" r="2"/></svg>
+          <span>變數觀察</span>
+        </button>
+        <button class="hl-tab-btn" data-tab="tab-js">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>JS 轉譯</span>
+        </button>
+        <button class="hl-tab-btn" data-tab="tab-docs">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <span>語法指南</span>
+        </button>
+      </div>
+
+      <!-- 分頁內容區域 -->
+      <div class="hl-tab-content-area">
+        <!-- 終端輸出 Pane -->
+        <div class="hl-tab-pane active" id="tab-term">
+          <div class="hl-terminal" id="terminalOutput">
+            <div class="hl-term-line system">🌟 華語 (HuaLang / .chine) 編譯器與 HuaVM 虛擬機已就緒。點擊「執行 (▶)」編譯並運行。</div>
+          </div>
+        </div>
+
+        <!-- 編譯器組語 Pane (.casm) -->
+        <div class="hl-tab-pane" id="tab-casm">
+          <div style="padding: 8px 12px; background: var(--bg-tertiary); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+            <span style="font-size: 11px; color: var(--accent-cyan); font-weight: 600;">1. 編譯器輸出：華語組合語言 (.casm)</span>
+            <button id="btnCopyCasm" class="hl-btn hl-btn-secondary" style="font-size: 11px; padding: 3px 8px;">複製組語</button>
+          </div>
+          <pre class="hl-transpiled-view" id="casmOutput" style="flex: 1;">; 點擊執行或輸入代碼，編譯器將即時產出 .casm 組合語言</pre>
+        </div>
+
+        <!-- 組譯器目標檔 Pane (.cobj) -->
+        <div class="hl-tab-pane" id="tab-cobj">
+          <div style="padding: 8px 12px; background: var(--bg-tertiary); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+            <span style="font-size: 11px; color: var(--accent-jade); font-weight: 600;">2. 組譯器輸出：可重定位目標檔 (.cobj 符號表與常數池)</span>
+          </div>
+          <pre class="hl-ast-view" id="cobjOutput" style="flex: 1;">// 組譯器將 .casm 轉換為二進位目標檔結構與符號表</pre>
+        </div>
+
+        <!-- 連結器執行檔 Pane (.cbinary) -->
+        <div class="hl-tab-pane" id="tab-cbinary">
+          <div style="padding: 8px 12px; background: var(--bg-tertiary); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+            <span style="font-size: 11px; color: var(--accent-amber); font-weight: 600;">3. 連結器輸出：可執行檔 (.cbinary 符號重定位完成)</span>
+            <button id="btnExportBinary" class="hl-btn hl-btn-secondary" style="font-size: 11px; padding: 3px 8px;">下載 .cbinary</button>
+          </div>
+          <pre class="hl-ast-view" id="cbinaryOutput" style="flex: 1;">// 連結器解析外部依賴與位址重定位，生成 HuaVM 執行檔</pre>
+        </div>
+
+        <!-- 海龜繪圖 Pane -->
+        <div class="hl-tab-pane" id="tab-canvas">
+          <div class="hl-canvas-container">
+            <div class="hl-canvas-toolbar">
+              <button id="btnSaveCanvas" class="hl-btn hl-btn-secondary hl-btn-icon-only" title="儲存為圖片">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+              <button id="btnResetTurtle" class="hl-btn hl-btn-secondary hl-btn-icon-only" title="重設畫布">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              </button>
+            </div>
+            <canvas id="turtleCanvas" width="400" height="400"></canvas>
+          </div>
+        </div>
+
+        <!-- 變數觀察 Pane -->
+        <div class="hl-tab-pane" id="tab-vars">
+          <div class="hl-variables-view">
+            <table class="hl-var-table">
+              <thead>
+                <tr>
+                  <th>變數名稱</th>
+                  <th>當前數值</th>
+                </tr>
+              </thead>
+              <tbody id="variablesTableBody">
+                <tr><td colspan="2" style="color: var(--text-muted); text-align: center;">尚未開始執行程式</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AST 語法樹 Pane -->
+        <div class="hl-tab-pane" id="tab-ast">
+          <pre class="hl-ast-view" id="astOutput">/* 語法樹將在執行或分析時動態呈現 */</pre>
+        </div>
+
+        <!-- JS 轉譯 Pane -->
+        <div class="hl-tab-pane" id="tab-js">
+          <div style="padding: 8px 12px; background: var(--bg-tertiary); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+            <span style="font-size: 11px; color: var(--text-secondary);">轉譯後的 JavaScript 代碼</span>
+            <button id="btnCopyJs" class="hl-btn hl-btn-secondary" style="font-size: 11px; padding: 3px 8px;">複製 JS</button>
+          </div>
+          <pre class="hl-transpiled-view" id="jsOutput" style="flex: 1;">// 點擊「執行」即可檢視對應的 JavaScript 程式碼</pre>
+        </div>
+
+        <!-- 語法指南手冊 Pane -->
+        <div class="hl-tab-pane" id="tab-docs">
+          <div class="hl-docs-view">
+            <div class="hl-doc-card">
+              <h3>📌 變數與常數</h3>
+              <p>使用「變數」、「設」、「令」宣告可變變數，使用「常數」宣告唯讀變數：</p>
+              <pre class="hl-doc-code">設 分數 = 95;
+常數 圓周率 = 3.14159;</pre>
+            </div>
+
+            <div class="hl-doc-card">
+              <h3>📌 條件判斷 (若 / 否則若 / 否則)</h3>
+              <pre class="hl-doc-code">若 (分數 >= 90) {
+  印出("特優");
+} 否則若 (分數 >= 60) {
+  印出("及格");
+} 否則 {
+  印出("不及格");
+}</pre>
+            </div>
+
+            <div class="hl-doc-card">
+              <h3>📌 迴圈控制 (當 / 從...到...循環 / 遍歷)</h3>
+              <pre class="hl-doc-code">// 計數循環
+從 1 到 5 循環 (i) {
+  印出("計數：", i);
+}
+
+// 遍歷陣列
+遍歷 ["蘋果", "香蕉", "芒果"] 於 水果 {
+  印出("水果：", 水果);
+}</pre>
+            </div>
+
+            <div class="hl-doc-card">
+              <h3>📌 自訂函式</h3>
+              <pre class="hl-doc-code">函式 計算總和(甲, 乙) {
+  回傳 甲 + 乙;
+}
+印出(計算總和(10, 25));</pre>
+            </div>
+
+            <div class="hl-doc-card">
+              <h3>📌 內建好用模組</h3>
+              <pre class="hl-doc-code">印出(...)             // 列印輸出
+輸入("請輸入姓名：")   // 彈出視窗輸入
+等待(1000)            // 暫停一秒
+算術.整數隨機數(1, 10) // 產生隨機數
+海龜.前進(100)        // 海龜繪圖
+音效.音階("Do", 300)   // 演奏音符</pre>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- 互動輸入模態對話框 -->
+  <div class="hl-modal-backdrop" id="inputModal">
+    <div class="hl-modal-box">
+      <div class="hl-modal-title" id="modalPromptTitle">請輸入內容：</div>
+      <input type="text" id="modalInputField" class="hl-modal-input" placeholder="請在此輸入並按 Enter 或確定...">
+      <div class="hl-modal-actions">
+        <button id="modalBtnCancel" class="hl-btn hl-btn-secondary">取消</button>
+        <button id="modalBtnConfirm" class="hl-btn hl-btn-primary">確定</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

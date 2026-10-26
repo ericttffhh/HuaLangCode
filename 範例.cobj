@@ -1,0 +1,386 @@
+{
+  "magic": "CHINEOBJ",
+  "version": "1.0.0",
+  "timestamp": 1793004791569,
+  "constantPool": [
+    "華語 (HuaLang)",
+    "語言",
+    ".chine",
+    "副檔名",
+    "歡迎使用獨立高階語言：",
+    "，專屬副檔名：",
+    0,
+    "質數計數",
+    2,
+    "數字",
+    20,
+    "true",
+    "是質數",
+    "因數",
+    1,
+    "false",
+    "發現質數：",
+    "2 到 20 之間的質數共有：",
+    "個！"
+  ],
+  "symbolTable": {
+    "_主程式入口": {
+      "offset": 0,
+      "type": "LABEL",
+      "exported": false
+    },
+    ".計數_開始_1": {
+      "offset": 16,
+      "type": "LABEL",
+      "exported": false
+    },
+    ".計數_開始_3": {
+      "offset": 24,
+      "type": "LABEL",
+      "exported": false
+    },
+    ".若_結束_6": {
+      "offset": 38,
+      "type": "LABEL",
+      "exported": false
+    },
+    ".計數_結束_4": {
+      "offset": 43,
+      "type": "LABEL",
+      "exported": false
+    },
+    ".若_結束_8": {
+      "offset": 54,
+      "type": "LABEL",
+      "exported": false
+    },
+    ".計數_結束_2": {
+      "offset": 59,
+      "type": "LABEL",
+      "exported": false
+    }
+  },
+  "relocations": [],
+  "codeSegment": [
+    {
+      "ip": 0,
+      "opcode": 1,
+      "operand": 0
+    },
+    {
+      "ip": 1,
+      "opcode": 3,
+      "operand": 1
+    },
+    {
+      "ip": 2,
+      "opcode": 1,
+      "operand": 2
+    },
+    {
+      "ip": 3,
+      "opcode": 3,
+      "operand": 3
+    },
+    {
+      "ip": 4,
+      "opcode": 1,
+      "operand": 4
+    },
+    {
+      "ip": 5,
+      "opcode": 2,
+      "operand": 1
+    },
+    {
+      "ip": 6,
+      "opcode": 16,
+      "operand": null
+    },
+    {
+      "ip": 7,
+      "opcode": 1,
+      "operand": 5
+    },
+    {
+      "ip": 8,
+      "opcode": 16,
+      "operand": null
+    },
+    {
+      "ip": 9,
+      "opcode": 2,
+      "operand": 3
+    },
+    {
+      "ip": 10,
+      "opcode": 16,
+      "operand": null
+    },
+    {
+      "ip": 11,
+      "opcode": 82,
+      "operand": 1
+    },
+    {
+      "ip": 12,
+      "opcode": 1,
+      "operand": 6
+    },
+    {
+      "ip": 13,
+      "opcode": 3,
+      "operand": 7
+    },
+    {
+      "ip": 14,
+      "opcode": 1,
+      "operand": 8
+    },
+    {
+      "ip": 15,
+      "opcode": 3,
+      "operand": 9
+    },
+    {
+      "ip": 16,
+      "opcode": 2,
+      "operand": 9
+    },
+    {
+      "ip": 17,
+      "opcode": 1,
+      "operand": 10
+    },
+    {
+      "ip": 18,
+      "opcode": 36,
+      "operand": null
+    },
+    {
+      "ip": 19,
+      "opcode": 49,
+      "operand": 59
+    },
+    {
+      "ip": 20,
+      "opcode": 1,
+      "operand": 11
+    },
+    {
+      "ip": 21,
+      "opcode": 3,
+      "operand": 12
+    },
+    {
+      "ip": 22,
+      "opcode": 1,
+      "operand": 8
+    },
+    {
+      "ip": 23,
+      "opcode": 3,
+      "operand": 13
+    },
+    {
+      "ip": 24,
+      "opcode": 2,
+      "operand": 13
+    },
+    {
+      "ip": 25,
+      "opcode": 2,
+      "operand": 9
+    },
+    {
+      "ip": 26,
+      "opcode": 1,
+      "operand": 14
+    },
+    {
+      "ip": 27,
+      "opcode": 17,
+      "operand": null
+    },
+    {
+      "ip": 28,
+      "opcode": 36,
+      "operand": null
+    },
+    {
+      "ip": 29,
+      "opcode": 49,
+      "operand": 43
+    },
+    {
+      "ip": 30,
+      "opcode": 2,
+      "operand": 9
+    },
+    {
+      "ip": 31,
+      "opcode": 2,
+      "operand": 13
+    },
+    {
+      "ip": 32,
+      "opcode": 20,
+      "operand": null
+    },
+    {
+      "ip": 33,
+      "opcode": 1,
+      "operand": 6
+    },
+    {
+      "ip": 34,
+      "opcode": 32,
+      "operand": null
+    },
+    {
+      "ip": 35,
+      "opcode": 49,
+      "operand": 38
+    },
+    {
+      "ip": 36,
+      "opcode": 1,
+      "operand": 15
+    },
+    {
+      "ip": 37,
+      "opcode": 3,
+      "operand": 12
+    },
+    {
+      "ip": 38,
+      "opcode": 2,
+      "operand": 13
+    },
+    {
+      "ip": 39,
+      "opcode": 1,
+      "operand": 14
+    },
+    {
+      "ip": 40,
+      "opcode": 16,
+      "operand": null
+    },
+    {
+      "ip": 41,
+      "opcode": 3,
+      "operand": 13
+    },
+    {
+      "ip": 42,
+      "opcode": 48,
+      "operand": 24
+    },
+    {
+      "ip": 43,
+      "opcode": 2,
+      "operand": 12
+    },
+    {
+      "ip": 44,
+      "opcode": 1,
+      "operand": 11
+    },
+    {
+      "ip": 45,
+      "opcode": 32,
+      "operand": null
+    },
+    {
+      "ip": 46,
+      "opcode": 49,
+      "operand": 54
+    },
+    {
+      "ip": 47,
+      "opcode": 1,
+      "operand": 16
+    },
+    {
+      "ip": 48,
+      "opcode": 2,
+      "operand": 9
+    },
+    {
+      "ip": 49,
+      "opcode": 82,
+      "operand": 2
+    },
+    {
+      "ip": 50,
+      "opcode": 2,
+      "operand": 7
+    },
+    {
+      "ip": 51,
+      "opcode": 1,
+      "operand": 14
+    },
+    {
+      "ip": 52,
+      "opcode": 16,
+      "operand": null
+    },
+    {
+      "ip": 53,
+      "opcode": 3,
+      "operand": 7
+    },
+    {
+      "ip": 54,
+      "opcode": 2,
+      "operand": 9
+    },
+    {
+      "ip": 55,
+      "opcode": 1,
+      "operand": 14
+    },
+    {
+      "ip": 56,
+      "opcode": 16,
+      "operand": null
+    },
+    {
+      "ip": 57,
+      "opcode": 3,
+      "operand": 9
+    },
+    {
+      "ip": 58,
+      "opcode": 48,
+      "operand": 16
+    },
+    {
+      "ip": 59,
+      "opcode": 1,
+      "operand": 17
+    },
+    {
+      "ip": 60,
+      "opcode": 2,
+      "operand": 7
+    },
+    {
+      "ip": 61,
+      "opcode": 1,
+      "operand": 18
+    },
+    {
+      "ip": 62,
+      "opcode": 82,
+      "operand": 3
+    },
+    {
+      "ip": 63,
+      "opcode": 255,
+      "operand": null
+    }
+  ]
+}

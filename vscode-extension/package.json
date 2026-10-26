@@ -1,0 +1,115 @@
+{
+  "name": "chine-lang",
+  "displayName": "華語 (HuaLang / .chine) 中文程式語言",
+  "description": "華語 (.chine) 獨立高階語言官方 VS Code 擴充套件：語法高亮、智慧代碼補全、工具欄一鍵執行、原生機械語言編譯與海龜繪圖 Web IDE",
+  "version": "1.0.0",
+  "publisher": "hualang",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Linters"
+  ],
+  "keywords": [
+    "chine",
+    "hualang",
+    "chinese",
+    "中文編程",
+    "華語"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:chine",
+    "workspaceContains:**/*.chine"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "chine",
+        "aliases": ["華語", "HuaLang", "chine"],
+        "extensions": [".chine"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "chine",
+        "scopeName": "source.chine",
+        "path": "./syntaxes/chine.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "chine",
+        "path": "./snippets/chine.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "chine.run",
+        "title": "執行華語程式",
+        "category": "華語 (HuaLang)",
+        "icon": "$(play)"
+      },
+      {
+        "command": "chine.compileNative",
+        "title": "編譯為原生 ARM64 機械語言並執行",
+        "category": "華語 (HuaLang)",
+        "icon": "$(zap)"
+      },
+      {
+        "command": "chine.compileCasm",
+        "title": "編譯為華語組合語言 (.casm)",
+        "category": "華語 (HuaLang)",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "chine.openWebIDE",
+        "title": "開啟海龜繪圖可視化 Web IDE",
+        "category": "華語 (HuaLang)",
+        "icon": "$(browser)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "chine.run",
+          "when": "resourceExtname == .chine",
+          "group": "navigation@1"
+        },
+        {
+          "command": "chine.openWebIDE",
+          "when": "resourceExtname == .chine",
+          "group": "navigation@2"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "chine.run",
+          "when": "resourceExtname == .chine",
+          "group": "chine_ops@1"
+        },
+        {
+          "command": "chine.compileNative",
+          "when": "resourceExtname == .chine",
+          "group": "chine_ops@2"
+        },
+        {
+          "command": "chine.compileCasm",
+          "when": "resourceExtname == .chine",
+          "group": "chine_ops@3"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "chine.run",
+        "key": "ctrl+f5",
+        "mac": "cmd+f5",
+        "when": "editorLangId == chine"
+      }
+    ]
+  }
+}
