@@ -18,6 +18,7 @@ import { Compiler } from '../src/compiler/compiler.js';
 import { Assembler } from '../src/compiler/assembler.js';
 import { Linker } from '../src/compiler/linker.js';
 import { HuaVM } from '../src/compiler/vm.js';
+import { IntentCompiler } from '../src/compiler/intent-compiler.js';
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -29,12 +30,13 @@ function printHelp() {
 ╚════════════════════════════════════════════════════════════════════╝
 
 使用方式：
-  node bin/chine.js run <原始碼.chine>              直接編譯、連結並在 HuaVM 執行
-  node bin/chine.js compile <原始碼.chine> [-o 組語.casm]  編譯器：生成華語組合語言
-  node bin/chine.js assemble <組語.casm> [-o 目標.cobj]    組譯器：生成目標檔
-  node bin/chine.js link <目標.cobj> [-o 執行檔.cbinary]   連結器：生成可執行檔
-  node bin/chine.js exec <執行檔.cbinary>                 HuaVM 虛擬機直接執行二進位檔
-  node bin/chine.js ide                                  啟動 Web 整合開發環境
+  node bin/chine.js intent "<中文句子需求>" [-o 輸出.chine]   一句話自然語言意圖編譯器
+  node bin/chine.js run <原始碼.chine>                      直接編譯、連結並在 HuaVM 執行
+  node bin/chine.js compile <原始碼.chine> [-o 組語.casm]     編譯器：生成華語組合語言
+  node bin/chine.js assemble <組語.casm> [-o 目標.cobj]       組譯器：生成目標檔
+  node bin/chine.js link <目標.cobj> [-o 執行檔.cbinary]      連結器：生成可執行檔
+  node bin/chine.js exec <執行檔.cbinary>                    HuaVM 虛擬機直接執行二進位檔
+  node bin/chine.js ide                                     啟動 Web 整合開發環境
 `);
 }
 
@@ -44,7 +46,24 @@ if (!command || command === '--help' || command === '-h') {
 }
 
 try {
-  if (command === 'run') {
+  if (command === 'intent') {
+    const sentence = args[1];
+    if (!sentence) {
+      console.error('錯誤：請輸入描述程式需求的中文句子！例如：node bin/chine.js intent "做一個貪食蛇遊戲"');
+      process.exit(1);
+    }
+    const compiler = new IntentCompiler();
+    const res = compiler.compileSentence(sentence);
+
+    const outputPath = args[2] === '-o' && args[3] ? args[3] : `${res.title.replace(/[\s\/:*?"<>|]/g, '_')}.chine`;
+    fs.writeFileSync(outputPath, res.chineCode, 'utf-8');
+    console.log(`🎯 [意圖解析成功] 類別：${res.category} | 目標：${res.title}`);
+    console.log(`✨ 說明：${res.description}`);
+    console.log(`✔ [已生成華語程式碼] ${outputPath}`);
+    console.log('\n--- 程式碼預覽 ---');
+    console.log(res.chineCode.split('\n').slice(0, 16).join('\n') + '\n...');
+  }
+  else if (command === 'run') {
     const filePath = args[1];
     if (!filePath) {
       console.error('錯誤：請指定 .chine 原始碼檔案路徑。');

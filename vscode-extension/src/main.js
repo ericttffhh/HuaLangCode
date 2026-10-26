@@ -11,6 +11,7 @@ import { Compiler } from './compiler/compiler.js';
 import { Assembler } from './compiler/assembler.js';
 import { Linker } from './compiler/linker.js';
 import { HuaVM } from './compiler/vm.js';
+import { IntentCompiler } from './compiler/intent-compiler.js';
 import { EXAMPLES } from './lang/examples.js';
 import { ChineseCodeEditor } from './ide/editor.js';
 import { TurtleGraphics } from './ide/turtle.js';
@@ -62,6 +63,67 @@ const transpiler = new Transpiler();
 const compiler = new Compiler();
 const assembler = new Assembler();
 const linker = new Linker();
+const intentCompiler = new IntentCompiler();
+
+const intentInput = document.getElementById('intentInput');
+const btnCompileIntent = document.getElementById('btnCompileIntent');
+const liveAppHost = document.getElementById('liveAppHost');
+const previewTitle = document.getElementById('previewTitle');
+const previewCategory = document.getElementById('previewCategory');
+
+function handleCompileIntent(sentence) {
+  if (!sentence || !sentence.trim()) return;
+  try {
+    const result = intentCompiler.compileSentence(sentence);
+    editor.setValue(result.chineCode);
+    currentFileName.textContent = `${result.title.replace(/[\s\/:*?"<>|]/g, '_')}.chine`;
+
+    // 渲染即時互動應用
+    liveAppHost.innerHTML = result.webHtml;
+    if (result.clientScript) {
+      try {
+        const runScript = new Function(result.clientScript);
+        runScript();
+      } catch (e) {
+        console.warn('Script eval error:', e);
+      }
+    }
+
+    previewTitle.textContent = `✨ ${result.title}`;
+    previewCategory.textContent = result.category;
+
+    // 切換至預覽分頁並在終端機列印意圖資訊
+    switchTab('tab-preview');
+    printToTerminal(`🎯 [意圖解析成功] 類別：${result.category} | 成果：${result.title}`, 'system');
+    printToTerminal(`✨ 說明：${result.description}`, 'system');
+    printToTerminal(`✔ 已自動編譯生成高階代碼，並掛載即時互動介面！`, 'success');
+
+    // 同步執行編譯鏈
+    updatePipelinePreview();
+  } catch (err) {
+    printToTerminal(`❌ 意圖編譯失敗：${err.message}`, 'error');
+  }
+}
+
+if (btnCompileIntent && intentInput) {
+  btnCompileIntent.addEventListener('click', () => {
+    handleCompileIntent(intentInput.value);
+  });
+
+  intentInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      handleCompileIntent(intentInput.value);
+    }
+  });
+
+  document.querySelectorAll('.intent-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const intent = chip.getAttribute('data-intent');
+      intentInput.value = intent;
+      handleCompileIntent(intent);
+    });
+  });
+}
 
 let activeVM = null;
 let activeInterpreter = null;
